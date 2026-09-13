@@ -1,0 +1,81 @@
+# EchoSMP
+
+Ein vollständig automatisches Sidebar-Scoreboard-Plugin für Paper/Spigot 1.21+.
+
+## Features
+
+- Sidebar mit dem Titel `echo smp` und einem glatten Drei-Farben-Gradienten.
+- Persönlicher Spielername.
+- Aktuelle Online-Spielerzahl und konfigurierte Maximalzahl.
+- Persistente Spielzeit pro Spieler im Format `Xs`, `Ym` oder `Xh Ym`.
+- Spielzeit wird beim Join geladen, beim Quit gespeichert, alle fünf Minuten gesichert und beim Server-Stop geschrieben.
+- Keine Commands und keine Permissions.
+- Rote Score-Zahlen werden mit der Paper-API `NumberFormat.blank()` ausgeblendet.
+- Konfiguration wird beim ersten Start automatisch erzeugt und gespeichert.
+
+## Installation
+
+1. Eine aktuelle Paper-1.21+-Serverversion mit Java 21 verwenden.
+2. Die Datei `EchoSMP-1.0.0.jar` aus dem Release oder aus `build/libs/` nach `plugins/` kopieren.
+3. Den Server starten.
+4. Beim ersten Start werden `plugins/EchoSMP/config.yml` und `plugins/EchoSMP/playerdata.yml` angelegt.
+
+Es gibt absichtlich keinen Plugin-Befehl. Alle Anzeigen und Speicherungen laufen automatisch.
+
+## Build lokal
+
+Voraussetzung ist ein installiertes JDK 21.
+
+```text
+gradle build
+```
+
+Die fertige Datei liegt danach unter `build/libs/EchoSMP-1.0.0.jar`.
+
+Alternativ kann ein Gradle Wrapper ergänzt werden und anschließend `./gradlew build` beziehungsweise unter Windows `gradlew.bat build` verwendet werden.
+
+## GitHub Actions
+
+Der Workflow `.github/workflows/build.yml` baut bei jedem Push und Pull Request mit Java 21. Die erzeugte JAR wird als Workflow-Artefakt `EchoSMP` hochgeladen.
+
+## Konfiguration
+
+Beim ersten Start wird die Vorlage aus `src/main/resources/config.yml` nach `plugins/EchoSMP/config.yml` kopiert und danach gespeichert. Die Standardwerte sind:
+
+```yaml
+update-interval-ticks: 20
+max-players: -1
+gradient-start: "#FF8A8A"
+gradient-mid: "#E63946"
+gradient-end: "#FFA500"
+emoji-player: "👤"
+emoji-clock: "⏰"
+scoreboard-title: "echo smp"
+```
+
+`max-players: -1` verwendet automatisch `Bukkit.getMaxPlayers()`. Änderungen werden beim nächsten Serverstart eingelesen; es gibt keinen Reload-Befehl.
+
+## Datenspeicherung
+
+Die Spielzeiten liegen in `plugins/EchoSMP/playerdata.yml`:
+
+```yaml
+<UUID>: <sekunden>
+```
+
+Die Datei wird bei jedem Quit, alle fünf Minuten und beim Server-Stop gespeichert. Die aktuell laufende Session wird für die Anzeige aus dem gespeicherten Basiswert und der Join-Zeit berechnet.
+
+## Repository auf GitHub veröffentlichen
+
+Im Repository-Ordner ausführen:
+
+```text
+git init
+git add .
+git commit -m "Initiale EchoSMP-Version"
+git branch -M main
+git remote add origin https://github.com/DEIN-ACCOUNT/DEIN-REPOSITORY.git
+git push -u origin main
+```
+
+Die URL des Remotes durch das eigene GitHub-Repository ersetzen. Nach dem Push ist der Build unter dem Tab **Actions** sichtbar.
