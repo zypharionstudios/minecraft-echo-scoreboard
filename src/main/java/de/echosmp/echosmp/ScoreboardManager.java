@@ -5,12 +5,12 @@ import java.util.Map;
 import java.util.UUID;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.MiniMessage;
+import io.papermc.paper.scoreboard.numbers.NumberFormat;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitTask;
 import org.bukkit.scoreboard.Criteria;
 import org.bukkit.scoreboard.DisplaySlot;
-import org.bukkit.scoreboard.NumberFormat;
 import org.bukkit.scoreboard.Objective;
 import org.bukkit.scoreboard.RenderType;
 import org.bukkit.scoreboard.Score;
@@ -76,7 +76,7 @@ public final class ScoreboardManager {
             team.addEntry(ENTRIES[index]);
             Score score = objective.getScore(ENTRIES[index]);
             score.setScore(ENTRIES.length - index);
-            score.setNumberFormat(NumberFormat.blank());
+            score.numberFormat(NumberFormat.blank());
         }
         return scoreboard;
     }
@@ -109,7 +109,7 @@ public final class ScoreboardManager {
         }
         Objective objective = scoreboard.getObjective(OBJECTIVE_NAME);
         if (objective != null) {
-            objective.getScore(ENTRIES[index]).setNumberFormat(NumberFormat.blank());
+            objective.getScore(ENTRIES[index]).numberFormat(NumberFormat.blank());
         }
     }
 
