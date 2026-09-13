@@ -104,9 +104,22 @@ public final class ScoreboardManager {
         setPrefix(scoreboard, 2, Component.text(config.getClockEmoji() + " " + playtimeManager.format(player))
                 .color(net.kyori.adventure.text.format.NamedTextColor.YELLOW));
         setPrefix(scoreboard, 3, pingComponent(player));
-        setPrefix(scoreboard, 4, Component.text("--------------------"));
+        setPrefix(scoreboard, 4, separatorComponent(player));
         setPrefix(scoreboard, 5, Component.text(config.getDiscordText())
             .color(TextColor.color(0x4B0082)));
+    }
+
+    private Component separatorComponent(Player player) {
+        String players = config.getPlayerEmoji() + " "
+                + Bukkit.getOnlinePlayers().size() + "/" + config.getMaxPlayers();
+        String playtime = config.getClockEmoji() + " " + playtimeManager.format(player);
+        String ping = config.getMsEmoji() + " " + Math.max(0, player.getPing()) + "ms";
+        int width = Math.max(player.getName().length(), config.getDiscordText().length());
+        width = Math.max(width, players.length());
+        width = Math.max(width, playtime.length());
+        width = Math.max(width, ping.length());
+        return Component.text("-".repeat(Math.max(1, width)))
+                .color(net.kyori.adventure.text.format.NamedTextColor.BLACK);
     }
 
     private Component pingComponent(Player player) {
