@@ -3,6 +3,7 @@ name: Build EchoSMP
 on:
   push:
   pull_request:
+  workflow_dispatch:
 
 jobs:
   build:
@@ -18,12 +19,11 @@ jobs:
         with:
           distribution: temurin
           java-version: '21'
-          cache: gradle
-      - name: Gradle Build ausführen
-        uses: gradle/actions/setup-gradle@v4
-      - run: gradle build
+          cache: maven
+      - name: Maven Build ausfuehren
+        run: mvn --batch-mode clean package
       - name: Plugin-JAR hochladen
         uses: actions/upload-artifact@v4
         with:
           name: EchoSMP
-          path: build/libs/EchoSMP-*.jar
+          path: target/EchoSMP-1.0.0.jar

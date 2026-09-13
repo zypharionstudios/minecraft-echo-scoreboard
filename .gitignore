@@ -1,6 +1,8 @@
+target/
+bin/
 .gradle/
 build/
-out/
+.mvn/timing.properties
 .idea/
 *.iml
 .DS_Store

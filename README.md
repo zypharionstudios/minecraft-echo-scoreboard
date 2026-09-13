@@ -16,7 +16,7 @@ Ein vollständig automatisches Sidebar-Scoreboard-Plugin für Paper/Spigot 1.21+
 ## Installation
 
 1. Eine aktuelle Paper-1.21+-Serverversion mit Java 21 verwenden.
-2. Die Datei `EchoSMP-1.0.0.jar` aus dem Release oder aus `build/libs/` nach `plugins/` kopieren.
+2. Die Datei `EchoSMP-1.0.0.jar` aus dem Release oder aus `target/` nach `plugins/` kopieren.
 3. Den Server starten.
 4. Beim ersten Start werden `plugins/EchoSMP/config.yml` und `plugins/EchoSMP/playerdata.yml` angelegt.
 
@@ -27,16 +27,14 @@ Es gibt absichtlich keinen Plugin-Befehl. Alle Anzeigen und Speicherungen laufen
 Voraussetzung ist ein installiertes JDK 21.
 
 ```text
-gradle build
+mvn clean package
 ```
 
-Die fertige Datei liegt danach unter `build/libs/EchoSMP-1.0.0.jar`.
-
-Alternativ kann ein Gradle Wrapper ergänzt werden und anschließend `./gradlew build` beziehungsweise unter Windows `gradlew.bat build` verwendet werden.
+Die fertige Datei liegt danach unter `target/EchoSMP-1.0.0.jar`.
 
 ## GitHub Actions
 
-Der Workflow `.github/workflows/build.yml` baut bei jedem Push und Pull Request mit Java 21. Die erzeugte JAR wird als Workflow-Artefakt `EchoSMP` hochgeladen.
+Der Workflow `.github/workflows/build.yml` baut bei jedem Push und Pull Request mit Java 21 über Maven. Die erzeugte JAR wird als Workflow-Artefakt `EchoSMP` hochgeladen.
 
 ## Konfiguration
 
