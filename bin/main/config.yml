@@ -1,8 +1,0 @@
-update-interval-ticks: 20
-max-players: -1
-gradient-start: "#FF8A8A"
-gradient-mid: "#E63946"
-gradient-end: "#FFA500"
-emoji-player: "👤"
-emoji-clock: "⏰"
-scoreboard-title: "echo smp"

@@ -1,6 +1,5 @@
 target/
 bin/
-.gradle/
 build/
 .mvn/timing.properties
 .idea/
