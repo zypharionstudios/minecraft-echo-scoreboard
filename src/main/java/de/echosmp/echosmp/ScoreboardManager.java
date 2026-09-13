@@ -3,9 +3,10 @@ package de.echosmp.echosmp;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
+import io.papermc.paper.scoreboard.numbers.NumberFormat;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.MiniMessage;
-import io.papermc.paper.scoreboard.numbers.NumberFormat;
+import net.kyori.adventure.text.format.TextColor;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitTask;
@@ -20,7 +21,7 @@ import org.bukkit.scoreboard.Team;
 /** Erstellt und aktualisiert das individuelle Sidebar-Scoreboard. */
 public final class ScoreboardManager {
     private static final String OBJECTIVE_NAME = "echo_smp";
-    private static final String[] ENTRIES = {"§0", "§1", "§2"};
+    private static final String[] ENTRIES = {"§0", "§1", "§2", "§3"};
 
     private final EchoSmpPlugin plugin;
     private final ConfigManager config;
@@ -98,8 +99,24 @@ public final class ScoreboardManager {
         }
         setPrefix(scoreboard, 0, Component.text(player.getName()));
         setPrefix(scoreboard, 1, Component.text(config.getPlayerEmoji() + " "
-                + Bukkit.getOnlinePlayers().size() + "/" + config.getMaxPlayers()));
-        setPrefix(scoreboard, 2, Component.text(config.getClockEmoji() + " " + playtimeManager.format(player)));
+                + Bukkit.getOnlinePlayers().size() + "/" + config.getMaxPlayers())
+                .color(net.kyori.adventure.text.format.NamedTextColor.BLUE));
+        setPrefix(scoreboard, 2, Component.text(config.getClockEmoji() + " " + playtimeManager.format(player))
+                .color(net.kyori.adventure.text.format.NamedTextColor.YELLOW));
+        setPrefix(scoreboard, 3, pingComponent(player));
+    }
+
+    private Component pingComponent(Player player) {
+        int ping = Math.max(0, player.getPing());
+        TextColor color;
+        if (ping <= 100) {
+            color = TextColor.color(0x55FF55);
+        } else if (ping < 215) {
+            color = TextColor.color(0xFFA500);
+        } else {
+            color = TextColor.color(0xFF5555);
+        }
+        return Component.text("Ping: " + ping + "ms").color(color);
     }
 
     private void setPrefix(Scoreboard scoreboard, int index, Component prefix) {

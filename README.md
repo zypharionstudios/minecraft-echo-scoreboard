@@ -8,6 +8,8 @@ Ein vollständig automatisches Sidebar-Scoreboard-Plugin für Paper/Spigot 1.21+
 - Persönlicher Spielername.
 - Aktuelle Online-Spielerzahl und konfigurierte Maximalzahl.
 - Persistente Spielzeit pro Spieler im Format `Xs`, `Ym` oder `Xh Ym`.
+- Online-Spielerzahl blau und Spielzeit gelb.
+- Ping-Anzeige mit Farben: `1-100 ms` grün, `101-214 ms` orange und ab `215 ms` rot.
 - Spielzeit wird beim Join geladen, beim Quit gespeichert, alle fünf Minuten gesichert und beim Server-Stop geschrieben.
 - Keine Commands und keine Permissions.
 - Rote Score-Zahlen werden mit der Paper-API `NumberFormat.blank()` ausgeblendet.
