@@ -43,6 +43,14 @@ public final class ConfigManager {
         return config.getString("emoji-clock", "⏰");
     }
 
+    public String getMsEmoji() {
+        return config.getString("emoji-ms", "📶");
+    }
+
+    public String getDiscordText() {
+        return config.getString("discord-text", "discord:eosmp");
+    }
+
     public String getScoreboardTitle() {
         return config.getString("scoreboard-title", "echo smp");
     }

@@ -21,7 +21,7 @@ import org.bukkit.scoreboard.Team;
 /** Erstellt und aktualisiert das individuelle Sidebar-Scoreboard. */
 public final class ScoreboardManager {
     private static final String OBJECTIVE_NAME = "echo_smp";
-    private static final String[] ENTRIES = {"§0", "§1", "§2", "§3"};
+    private static final String[] ENTRIES = {"§0", "§1", "§2", "§3", "§4", "§5"};
 
     private final EchoSmpPlugin plugin;
     private final ConfigManager config;
@@ -104,6 +104,9 @@ public final class ScoreboardManager {
         setPrefix(scoreboard, 2, Component.text(config.getClockEmoji() + " " + playtimeManager.format(player))
                 .color(net.kyori.adventure.text.format.NamedTextColor.YELLOW));
         setPrefix(scoreboard, 3, pingComponent(player));
+        setPrefix(scoreboard, 4, Component.text("--------------------"));
+        setPrefix(scoreboard, 5, Component.text(config.getDiscordText())
+            .color(TextColor.color(0x4B0082)));
     }
 
     private Component pingComponent(Player player) {
@@ -116,7 +119,7 @@ public final class ScoreboardManager {
         } else {
             color = TextColor.color(0xFF5555);
         }
-        return Component.text("Ping: " + ping + "ms").color(color);
+        return Component.text(config.getMsEmoji() + " " + ping + "ms").color(color);
     }
 
     private void setPrefix(Scoreboard scoreboard, int index, Component prefix) {
