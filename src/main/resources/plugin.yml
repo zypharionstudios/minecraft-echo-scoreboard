@@ -13,3 +13,8 @@ commands:
   sell:
     description: Öffnet das EchoSMP-Verkaufsmenü
     usage: /sell
+  ah:
+    description: Öffnet das EchoSMP-Auktionshaus
+    usage: /ah
+    aliases:
+      - auctionhouse

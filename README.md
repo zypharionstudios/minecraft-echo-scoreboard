@@ -29,6 +29,8 @@ Mit `/scoreboard settings` kann jeder Spieler in einem 3x9-Menü Uhr, Geld, MS/P
 
 Mit `/sell` öffnet sich ein 3x9-Menü. Verkaufbare Blöcke werden in die oberen 25 Slots gelegt. Die grüne Glasscheibe unten rechts ist nicht entnehmbar und bestätigt den Verkauf. Nicht verkaufbare Items werden zurückgegeben. Guthaben liegt in `plugins/EchoSMP/money.yml`, Blockpreise in `plugins/EchoSMP/prices.yml`; diese Preisdatei wird automatisch für wirklich jeden Block angelegt. Die neue Preisstaffel verwendet realistische Gruppenwerte statt eines 1er-Fallbacks. Eine vorhandene alte Preisdatei wird beim nächsten Serverstart einmalig auf Preis-Schema 2 migriert und kann danach manuell angepasst werden.
 
+Mit `/ah` öffnet sich das 6x9-Auktionshaus. Die unteren Bedienelemente sind Aktualisieren, Sortierung, Suche und eigene Angebote. Eigene Angebote werden über die Truhe geöffnet und mit dem Buch erstellt. Nach der Eingabe eines Preises wird das Angebot 24 Stunden lang angezeigt; Käufer erhalten das Item und der Verkäufer das Geld. Eigene Angebote können nicht gekauft werden.
+
 ## Build lokal
 
 Voraussetzung ist ein installiertes JDK 21.

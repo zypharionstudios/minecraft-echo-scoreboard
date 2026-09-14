@@ -40,6 +40,12 @@ public final class MoneyManager {
         save();
     }
 
+    public void remove(UUID uuid, long amount) {
+        if (amount <= 0) return;
+        balances.put(uuid, Math.max(0L, get(uuid) - amount));
+        save();
+    }
+
     public void save() {
         for (Map.Entry<UUID, Long> entry : balances.entrySet()) {
             data.set(entry.getKey().toString(), entry.getValue());
