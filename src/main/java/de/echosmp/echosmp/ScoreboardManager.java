@@ -29,16 +29,18 @@ public final class ScoreboardManager {
     private final ConfigManager config;
     private final PlaytimeManager playtimeManager;
     private final PlayerSettingsManager settingsManager;
+    private final MoneyManager moneyManager;
     private final MiniMessage miniMessage = MiniMessage.miniMessage();
     private final Map<UUID, Scoreboard> scoreboards = new HashMap<>();
     private BukkitTask updateTask;
 
     public ScoreboardManager(EchoSmpPlugin plugin, ConfigManager config, PlaytimeManager playtimeManager,
-                             PlayerSettingsManager settingsManager) {
+                             PlayerSettingsManager settingsManager, MoneyManager moneyManager) {
         this.plugin = plugin;
         this.config = config;
         this.playtimeManager = playtimeManager;
         this.settingsManager = settingsManager;
+        this.moneyManager = moneyManager;
     }
 
     public void start() {
@@ -134,7 +136,8 @@ public final class ScoreboardManager {
                     .color(net.kyori.adventure.text.format.NamedTextColor.YELLOW));
         }
         if (settings.money()) {
-            lines.add(Component.text(config.getMoneyEmoji() + " Coming soon")
+            lines.add(Component.text(config.getMoneyEmoji() + " "
+                            + MoneyManager.format(moneyManager.get(player.getUniqueId())))
                     .color(net.kyori.adventure.text.format.NamedTextColor.GREEN));
         }
         if (settings.ping()) {
@@ -153,7 +156,10 @@ public final class ScoreboardManager {
         int width = Math.max(player.getName().length(), config.getDiscordText().length());
         if (settings.players()) width = Math.max(width, players.length());
         if (settings.clock()) width = Math.max(width, playtime.length());
-        if (settings.money()) width = Math.max(width, (config.getMoneyEmoji() + " Coming soon").length());
+        if (settings.money()) {
+            width = Math.max(width, (config.getMoneyEmoji() + " "
+                + MoneyManager.format(moneyManager.get(player.getUniqueId()))).length());
+        }
         if (settings.ping()) width = Math.max(width, ping.length());
         return Component.text("-".repeat(Math.max(1, width)))
                 .color(net.kyori.adventure.text.format.NamedTextColor.BLACK);

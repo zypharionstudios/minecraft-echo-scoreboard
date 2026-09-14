@@ -10,3 +10,6 @@ commands:
     usage: /scoreboard settings
     aliases:
       - scoreboardsettings
+  sell:
+    description: Öffnet das EchoSMP-Verkaufsmenü
+    usage: /sell
