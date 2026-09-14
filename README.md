@@ -27,7 +27,7 @@ Die Anzeigen und Speicherungen laufen automatisch. Zusätzlich gibt es `/scorebo
 
 Mit `/scoreboard settings` kann jeder Spieler in einem 3x9-Menü Uhr, Geld, MS/Ping und Spielerzahl einzeln ein- oder ausschalten. Die Auswahl wird in `plugins/EchoSMP/settings.yml` gespeichert.
 
-Mit `/sell` öffnet sich ein 3x9-Menü. Verkaufbare Blöcke werden in die oberen 25 Slots gelegt. Die grüne Glasscheibe unten rechts ist nicht entnehmbar und bestätigt den Verkauf. Nicht verkaufbare Items werden zurückgegeben. Guthaben liegt in `plugins/EchoSMP/money.yml`, Blockpreise in `plugins/EchoSMP/prices.yml`; diese Preisdatei wird beim ersten Start automatisch für jeden Block angelegt und kann angepasst werden.
+Mit `/sell` öffnet sich ein 3x9-Menü. Verkaufbare Blöcke werden in die oberen 25 Slots gelegt. Die grüne Glasscheibe unten rechts ist nicht entnehmbar und bestätigt den Verkauf. Nicht verkaufbare Items werden zurückgegeben. Guthaben liegt in `plugins/EchoSMP/money.yml`, Blockpreise in `plugins/EchoSMP/prices.yml`; diese Preisdatei wird automatisch für wirklich jeden Block angelegt. Die neue Preisstaffel verwendet realistische Gruppenwerte statt eines 1er-Fallbacks. Eine vorhandene alte Preisdatei wird beim nächsten Serverstart einmalig auf Preis-Schema 2 migriert und kann danach manuell angepasst werden.
 
 ## Build lokal
 
