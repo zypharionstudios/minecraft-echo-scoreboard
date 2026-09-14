@@ -31,7 +31,7 @@ Mit `/sell` öffnet sich ein 3x9-Menü. Verkaufbare Blöcke werden in die oberen
 
 Mit `/ah` öffnet sich das 6x9-Auktionshaus. Die unteren Bedienelemente sind Aktualisieren, Sortierung, Suche und eigene Angebote. Eigene Angebote werden über die Truhe geöffnet und mit dem Buch erstellt. Nach der Eingabe eines Preises wird das Angebot 24 Stunden lang angezeigt; Käufer erhalten das Item und der Verkäufer das Geld. Eigene Angebote können nicht gekauft werden.
 
-Im 3x9-Menü sind die Slots `0-24` für genau einen Item-Stack frei. Nur das graue Glas in Slot 25 und das grüne Bestätigungs-Glas in Slot 26 sind gesperrt. Ein Klick auf ein eigenes gelistetes Angebot nimmt es aus dem AH und gibt den Item-Stack zurück.
+Im 3x9-Menü sind alle Slots außer dem mittleren grauen Glas in Slot 13 und dem grünen Bestätigungs-Glas in Slot 26 frei. Genau ein Item-Stack kann eingestellt werden. Ein Klick auf ein eigenes gelistetes Angebot nimmt es aus dem AH und gibt den Item-Stack zurück.
 
 Schnellbefehle: `/ah sell 40k` verkauft den Item-Stack aus der Haupthand direkt für 40.000. `/ah diamond ore` öffnet das AH direkt mit der Suche; Unterstriche, Leerzeichen und Groß-/Kleinschreibung werden gleich behandelt.
 

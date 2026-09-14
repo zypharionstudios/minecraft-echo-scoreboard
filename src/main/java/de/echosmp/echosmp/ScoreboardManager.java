@@ -60,6 +60,16 @@ public final class ScoreboardManager {
         }
     }
 
+    /** Stellt die Sidebar auch nach GUI-/Scoreboard-Änderungen anderer Plugins wieder her. */
+    public void ensureVisible(Player player) {
+        Scoreboard current = scoreboards.get(player.getUniqueId());
+        if (current == null || player.getScoreboard() != current) {
+            show(player);
+        } else {
+            update(player);
+        }
+    }
+
     public void remove(Player player) {
         scoreboards.remove(player.getUniqueId());
         player.setScoreboard(Bukkit.getScoreboardManager().getMainScoreboard());
@@ -98,11 +108,7 @@ public final class ScoreboardManager {
 
     private void updateAll() {
         for (Player player : Bukkit.getOnlinePlayers()) {
-            if (!scoreboards.containsKey(player.getUniqueId())) {
-                show(player);
-            } else {
-                update(player);
-            }
+            ensureVisible(player);
         }
     }
 

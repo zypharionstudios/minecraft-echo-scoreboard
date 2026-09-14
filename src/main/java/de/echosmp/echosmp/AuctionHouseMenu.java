@@ -19,6 +19,7 @@ public final class AuctionHouseMenu {
     public static final String OWN_TITLE = "EchoSMP Meine Angebote";
     public static final String ADD_TITLE = "EchoSMP Angebot hinzufügen";
     public static final String SEARCH_TITLE = "EchoSMP AH Suche";
+    public static final int BLOCKED_SLOT = 13;
     public static final int CONFIRM_SLOT = 26;
     private final AuctionHouseManager auctions;
     private final Map<UUID, AuctionHouseManager.Sort> sorts = new HashMap<>();
@@ -63,7 +64,7 @@ public final class AuctionHouseMenu {
 
     public void openAdd(Player player) {
         Inventory inventory = Bukkit.createInventory(null, 27, ADD_TITLE);
-        inventory.setItem(25, button(Material.GRAY_STAINED_GLASS_PANE, ChatColor.DARK_GRAY + "Gesperrt"));
+        inventory.setItem(BLOCKED_SLOT, button(Material.GRAY_STAINED_GLASS_PANE, ChatColor.DARK_GRAY + "Mitte gesperrt"));
         inventory.setItem(CONFIRM_SLOT, button(Material.LIME_STAINED_GLASS_PANE, ChatColor.GREEN + "Bestätigen"));
         player.openInventory(inventory);
     }

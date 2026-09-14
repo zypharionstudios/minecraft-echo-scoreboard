@@ -29,6 +29,7 @@ public final class EchoSmpPlugin extends JavaPlugin {
 
         Bukkit.getPluginManager().registerEvents(new JoinListener(playtimeManager, scoreboardManager, auctionHouseManager), this);
         Bukkit.getPluginManager().registerEvents(new QuitListener(playtimeManager, scoreboardManager), this);
+        Bukkit.getPluginManager().registerEvents(new ScoreboardInventoryListener(this, scoreboardManager), this);
         Bukkit.getPluginManager().registerEvents(new SettingsListener(settingsManager, settingsMenu, scoreboardManager), this);
         Bukkit.getPluginManager().registerEvents(new SellListener(sellMenu, moneyManager), this);
         Bukkit.getPluginManager().registerEvents(signInputManager, this);

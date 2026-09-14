@@ -78,7 +78,9 @@ public final class AuctionHouseListener implements Listener {
                     player.sendMessage(ChatColor.RED + "Lege genau einen Item-Stack ein.");
                     return;
                 }
-                for (int slot = 0; slot < 25; slot++) event.getInventory().setItem(slot, null);
+                for (int slot = 0; slot < AuctionHouseMenu.CONFIRM_SLOT; slot++) {
+                    if (isInputSlot(slot)) event.getInventory().setItem(slot, null);
+                }
                 menu.setPending(player, item);
                 if (!signs.open(player, SignInputManager.Mode.PRICE, this::finishPrice)) {
                     menu.takePending(player.getUniqueId());
@@ -86,7 +88,7 @@ public final class AuctionHouseListener implements Listener {
                 }
                 return;
             }
-            if (rawSlot == 25) {
+            if (rawSlot == AuctionHouseMenu.BLOCKED_SLOT) {
                 event.setCancelled(true);
                 return;
             }
@@ -108,13 +110,13 @@ public final class AuctionHouseListener implements Listener {
         if (AuctionHouseMenu.MAIN_TITLE.equals(title) || AuctionHouseMenu.OWN_TITLE.equals(title)) event.setCancelled(true);
         if (AuctionHouseMenu.ADD_TITLE.equals(title)) {
             for (int slot : event.getRawSlots()) {
-                if (slot == 25 || slot == AuctionHouseMenu.CONFIRM_SLOT
-                    || (inputSlotCount(event.getInventory()) > 0 && slot >= 0 && slot < 25)) {
+                if (slot == AuctionHouseMenu.BLOCKED_SLOT || slot == AuctionHouseMenu.CONFIRM_SLOT
+                    || (inputSlotCount(event.getInventory()) > 0 && isInputSlot(slot))) {
                     event.setCancelled(true);
                     return;
                 }
             }
-            if (event.getRawSlots().stream().filter(slot -> slot >= 0 && slot < 25).count() > 1) {
+            if (event.getRawSlots().stream().filter(this::isInputSlot).count() > 1) {
                 event.setCancelled(true);
             }
         }
@@ -150,6 +152,7 @@ public final class AuctionHouseListener implements Listener {
     private ItemStack singleItem(Inventory inventory) {
         ItemStack found = null;
         for (int slot = 0; slot < AuctionHouseMenu.CONFIRM_SLOT; slot++) {
+            if (!isInputSlot(slot)) continue;
             ItemStack item = inventory.getItem(slot);
             if (item == null) continue;
             if (found != null) return null;
@@ -161,6 +164,7 @@ public final class AuctionHouseListener implements Listener {
     private int inputSlotCount(Inventory inventory) {
         int count = 0;
         for (int slot = 0; slot < AuctionHouseMenu.CONFIRM_SLOT; slot++) {
+            if (!isInputSlot(slot)) continue;
             if (inventory.getItem(slot) != null) count++;
         }
         return count;
@@ -168,6 +172,7 @@ public final class AuctionHouseListener implements Listener {
 
     private boolean hasDifferentInputItem(Inventory inventory, int slot) {
         for (int index = 0; index < AuctionHouseMenu.CONFIRM_SLOT; index++) {
+            if (!isInputSlot(index)) continue;
             if (index != slot && inventory.getItem(index) != null) return true;
         }
         return false;
@@ -175,9 +180,15 @@ public final class AuctionHouseListener implements Listener {
 
     private void returnItems(Player player, Inventory inventory, int end) {
         for (int slot = 0; slot < end; slot++) {
+            if (!isInputSlot(slot)) continue;
             ItemStack item = inventory.getItem(slot);
             if (item != null) { inventory.setItem(slot, null); give(player, item); }
         }
+    }
+
+    private boolean isInputSlot(int slot) {
+        return slot >= 0 && slot < AuctionHouseMenu.CONFIRM_SLOT
+                && slot != AuctionHouseMenu.BLOCKED_SLOT;
     }
 
     private void give(Player player, ItemStack item) {
