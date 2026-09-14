@@ -73,6 +73,13 @@ public final class AuctionHouseListener implements Listener {
                 signs.open(player, SignInputManager.Mode.PRICE, this::finishPrice);
             } else if (event.getRawSlot() >= AuctionHouseMenu.CONFIRM_SLOT) {
                 event.setCancelled(true);
+            } else if (event.isShiftClick() && hasInputItem(event.getInventory())) {
+                event.setCancelled(true);
+                player.sendMessage(ChatColor.RED + "Es darf nur ein Item-Stack eingestellt werden.");
+            } else if (event.getRawSlot() >= 0 && event.getRawSlot() < AuctionHouseMenu.CONFIRM_SLOT
+                    && hasDifferentInputItem(event.getInventory(), event.getRawSlot())) {
+                event.setCancelled(true);
+                player.sendMessage(ChatColor.RED + "Es darf nur ein Item-Stack eingestellt werden.");
             }
             return;
         }
@@ -83,7 +90,16 @@ public final class AuctionHouseListener implements Listener {
         String title = event.getView().getTitle();
         if (AuctionHouseMenu.MAIN_TITLE.equals(title) || AuctionHouseMenu.OWN_TITLE.equals(title)) event.setCancelled(true);
         if (AuctionHouseMenu.ADD_TITLE.equals(title)) {
-            for (int slot : event.getRawSlots()) if (slot >= AuctionHouseMenu.CONFIRM_SLOT) event.setCancelled(true);
+            for (int slot : event.getRawSlots()) {
+                if (slot >= AuctionHouseMenu.CONFIRM_SLOT
+                        || (hasInputItem(event.getInventory()) && slot < AuctionHouseMenu.CONFIRM_SLOT)) {
+                    event.setCancelled(true);
+                    return;
+                }
+            }
+            if (event.getRawSlots().stream().filter(slot -> slot < AuctionHouseMenu.CONFIRM_SLOT).count() > 1) {
+                event.setCancelled(true);
+            }
         }
     }
 
@@ -123,6 +139,17 @@ public final class AuctionHouseListener implements Listener {
             found = item.clone();
         }
         return found;
+    }
+
+    private boolean hasInputItem(Inventory inventory) {
+        return singleItem(inventory) != null;
+    }
+
+    private boolean hasDifferentInputItem(Inventory inventory, int slot) {
+        for (int index = 0; index < AuctionHouseMenu.CONFIRM_SLOT; index++) {
+            if (index != slot && inventory.getItem(index) != null) return true;
+        }
+        return false;
     }
 
     private void returnItems(Player player, Inventory inventory, int end) {

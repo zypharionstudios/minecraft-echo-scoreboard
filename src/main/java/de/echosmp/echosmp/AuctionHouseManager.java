@@ -63,11 +63,11 @@ public final class AuctionHouseManager {
 
     public synchronized List<AuctionListing> find(String search, Sort sort) {
         removeExpired();
-        String query = search == null ? "" : search.trim().toLowerCase();
+        String query = normalize(search);
         List<AuctionListing> result = listings.values().stream()
                 .filter(listing -> query.isEmpty()
-                        || listing.item().getType().name().toLowerCase().contains(query)
-                        || listing.sellerName().toLowerCase().contains(query))
+                || normalize(listing.item().getType().name()).contains(query)
+                || normalize(listing.sellerName()).contains(query))
                 .filter(listing -> !listing.expired(System.currentTimeMillis()))
                 .collect(ArrayList::new, ArrayList::add, ArrayList::addAll);
         Comparator<AuctionListing> comparator = switch (sort) {
@@ -78,6 +78,15 @@ public final class AuctionHouseManager {
         };
         result.sort(comparator);
         return result;
+    }
+
+    private String normalize(String value) {
+        if (value == null) return "";
+        return value.toLowerCase()
+                .replace('_', ' ')
+                .replace('-', ' ')
+                .replaceAll("\\s+", " ")
+                .trim();
     }
 
     public synchronized List<AuctionListing> sellerListings(UUID seller) {

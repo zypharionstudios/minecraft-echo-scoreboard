@@ -36,7 +36,7 @@ public final class EchoSmpPlugin extends JavaPlugin {
             moneyManager, signInputManager), this);
         getCommand("scoreboard").setExecutor(new SettingsCommand(settingsMenu));
         getCommand("sell").setExecutor(new SellCommand(sellMenu));
-        getCommand("ah").setExecutor(new AuctionHouseCommand(auctionHouseMenu));
+        getCommand("ah").setExecutor(new AuctionHouseCommand(auctionHouseMenu, auctionHouseManager));
         scoreboardManager.start();
 
         Bukkit.getScheduler().runTaskTimer(this, playtimeManager::saveAll, 6000L, 6000L);
