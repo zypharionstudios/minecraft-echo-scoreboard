@@ -41,7 +41,7 @@ public final class SignInputManager implements Listener {
             block.setBlockData(original, false);
             return false;
         }
-        sign.setLine(0, "EchoSMP");
+        sign.setLine(0, "");
         sign.setLine(1, "");
         sign.setLine(2, "");
         sign.setLine(3, "");
@@ -56,7 +56,7 @@ public final class SignInputManager implements Listener {
         Request request = requests.remove(event.getPlayer().getUniqueId());
         if (request == null || !request.block().equals(event.getBlock())) return;
         StringBuilder input = new StringBuilder();
-        for (int index = 1; index < 4; index++) {
+        for (int index = 0; index < 4; index++) {
             String line = event.getLine(index);
             if (line != null && !line.isBlank()) {
                 if (input.length() > 0) input.append(' ');
