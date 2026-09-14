@@ -19,11 +19,13 @@ public final class SettingsCommand implements CommandExecutor {
             sender.sendMessage("Dieser Befehl ist nur im Spiel verfügbar.");
             return true;
         }
-        if (args.length == 1 && args[0].equalsIgnoreCase("settings")) {
+        boolean directAlias = label.equalsIgnoreCase("scoreboardsettings") && args.length == 0;
+        boolean scoreboardSettings = args.length == 1 && args[0].equalsIgnoreCase("settings");
+        if (directAlias || scoreboardSettings) {
             menu.open(player);
             return true;
         }
-        player.sendMessage("Nutze /scoreboard settings");
+        player.sendMessage("Nutze /scoreboard settings oder /scoreboardsettings");
         return true;
     }
 }

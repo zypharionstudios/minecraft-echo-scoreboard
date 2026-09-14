@@ -8,3 +8,5 @@ commands:
   scoreboard:
     description: Öffnet die EchoSMP-Scoreboard-Einstellungen
     usage: /scoreboard settings
+    aliases:
+      - scoreboardsettings

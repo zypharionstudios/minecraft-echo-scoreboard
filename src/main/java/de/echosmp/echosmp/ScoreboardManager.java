@@ -135,7 +135,7 @@ public final class ScoreboardManager {
         }
         if (settings.money()) {
             lines.add(Component.text(config.getMoneyEmoji() + " Coming soon")
-                    .color(net.kyori.adventure.text.format.NamedTextColor.GOLD));
+                    .color(net.kyori.adventure.text.format.NamedTextColor.GREEN));
         }
         if (settings.ping()) {
             lines.add(pingComponent(player));
