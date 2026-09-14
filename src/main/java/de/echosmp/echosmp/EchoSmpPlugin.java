@@ -9,15 +9,20 @@ import org.bukkit.plugin.java.JavaPlugin;
 public final class EchoSmpPlugin extends JavaPlugin {
     private PlaytimeManager playtimeManager;
     private ScoreboardManager scoreboardManager;
+    private PlayerSettingsManager settingsManager;
 
     @Override
     public void onEnable() {
         ConfigManager configManager = new ConfigManager(this);
         playtimeManager = new PlaytimeManager(this);
-        scoreboardManager = new ScoreboardManager(this, configManager, playtimeManager);
+        settingsManager = new PlayerSettingsManager(this);
+        scoreboardManager = new ScoreboardManager(this, configManager, playtimeManager, settingsManager);
+        SettingsMenu settingsMenu = new SettingsMenu(settingsManager);
 
         Bukkit.getPluginManager().registerEvents(new JoinListener(playtimeManager, scoreboardManager), this);
         Bukkit.getPluginManager().registerEvents(new QuitListener(playtimeManager, scoreboardManager), this);
+        Bukkit.getPluginManager().registerEvents(new SettingsListener(settingsManager, settingsMenu, scoreboardManager), this);
+        getCommand("scoreboard").setExecutor(new SettingsCommand(settingsMenu));
         scoreboardManager.start();
 
         Bukkit.getScheduler().runTaskTimer(this, playtimeManager::saveAll, 6000L, 6000L);
@@ -31,6 +36,9 @@ public final class EchoSmpPlugin extends JavaPlugin {
         }
         if (playtimeManager != null) {
             playtimeManager.saveAll();
+        }
+        if (settingsManager != null) {
+            settingsManager.save();
         }
         getLogger().info("EchoSMP wurde deaktiviert.");
     }

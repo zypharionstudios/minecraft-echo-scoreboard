@@ -47,6 +47,10 @@ public final class ConfigManager {
         return config.getString("emoji-ms", "📶");
     }
 
+    public String getMoneyEmoji() {
+        return config.getString("emoji-money", "💰");
+    }
+
     public String getDiscordText() {
         return config.getString("discord-text", "discord:eosmp");
     }

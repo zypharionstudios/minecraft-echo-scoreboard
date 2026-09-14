@@ -23,7 +23,9 @@ Ein vollständig automatisches Sidebar-Scoreboard-Plugin für Paper/Spigot 1.21+
 3. Den Server starten.
 4. Beim ersten Start werden `plugins/EchoSMP/config.yml` und `plugins/EchoSMP/playerdata.yml` angelegt.
 
-Es gibt absichtlich keinen Plugin-Befehl. Alle Anzeigen und Speicherungen laufen automatisch.
+Die Anzeigen und Speicherungen laufen automatisch; zusätzlich gibt es ausschließlich den Einstellungsbefehl `/scoreboard settings`.
+
+Mit `/scoreboard settings` kann jeder Spieler in einem 3x9-Menü Uhr, Geld, MS/Ping und Spielerzahl einzeln ein- oder ausschalten. Die Auswahl wird in `plugins/EchoSMP/settings.yml` gespeichert. Die Geldzeile zeigt bis zur Implementierung des Wirtschaftssystems `💰 Coming soon`.
 
 ## Build lokal
 

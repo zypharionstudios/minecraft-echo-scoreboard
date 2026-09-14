@@ -1,6 +1,8 @@
 package de.echosmp.echosmp;
 
 import java.util.HashMap;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import io.papermc.paper.scoreboard.numbers.NumberFormat;
@@ -21,19 +23,22 @@ import org.bukkit.scoreboard.Team;
 /** Erstellt und aktualisiert das individuelle Sidebar-Scoreboard. */
 public final class ScoreboardManager {
     private static final String OBJECTIVE_NAME = "echo_smp";
-    private static final String[] ENTRIES = {"§0", "§1", "§2", "§3", "§4", "§5"};
+    private static final String[] ENTRIES = {"§0", "§1", "§2", "§3", "§4", "§5", "§6"};
 
     private final EchoSmpPlugin plugin;
     private final ConfigManager config;
     private final PlaytimeManager playtimeManager;
+    private final PlayerSettingsManager settingsManager;
     private final MiniMessage miniMessage = MiniMessage.miniMessage();
     private final Map<UUID, Scoreboard> scoreboards = new HashMap<>();
     private BukkitTask updateTask;
 
-    public ScoreboardManager(EchoSmpPlugin plugin, ConfigManager config, PlaytimeManager playtimeManager) {
+    public ScoreboardManager(EchoSmpPlugin plugin, ConfigManager config, PlaytimeManager playtimeManager,
+                             PlayerSettingsManager settingsManager) {
         this.plugin = plugin;
         this.config = config;
         this.playtimeManager = playtimeManager;
+        this.settingsManager = settingsManager;
     }
 
     public void start() {
@@ -41,10 +46,16 @@ public final class ScoreboardManager {
     }
 
     public void show(Player player) {
-        Scoreboard scoreboard = createScoreboard();
+        Scoreboard scoreboard = createScoreboard(player);
         scoreboards.put(player.getUniqueId(), scoreboard);
         player.setScoreboard(scoreboard);
         update(player);
+    }
+
+    public void refresh(Player player) {
+        if (scoreboards.containsKey(player.getUniqueId())) {
+            show(player);
+        }
     }
 
     public void remove(Player player) {
@@ -62,7 +73,7 @@ public final class ScoreboardManager {
         scoreboards.clear();
     }
 
-    private Scoreboard createScoreboard() {
+    private Scoreboard createScoreboard(Player player) {
         Scoreboard scoreboard = Bukkit.getScoreboardManager().getNewScoreboard();
         Objective objective = scoreboard.registerNewObjective(
                 OBJECTIVE_NAME,
@@ -72,11 +83,12 @@ public final class ScoreboardManager {
         );
         objective.setDisplaySlot(DisplaySlot.SIDEBAR);
 
-        for (int index = 0; index < ENTRIES.length; index++) {
+        List<Component> lines = activeLines(player);
+        for (int index = 0; index < lines.size(); index++) {
             Team team = scoreboard.registerNewTeam("echo_line_" + index);
             team.addEntry(ENTRIES[index]);
             Score score = objective.getScore(ENTRIES[index]);
-            score.setScore(ENTRIES.length - index);
+            score.setScore(lines.size() - index);
             score.numberFormat(NumberFormat.blank());
         }
         return scoreboard;
@@ -97,27 +109,52 @@ public final class ScoreboardManager {
         if (scoreboard == null) {
             return;
         }
-        setPrefix(scoreboard, 0, Component.text(player.getName()));
-        setPrefix(scoreboard, 1, Component.text(config.getPlayerEmoji() + " "
-                + Bukkit.getOnlinePlayers().size() + "/" + config.getMaxPlayers())
-                .color(net.kyori.adventure.text.format.NamedTextColor.BLUE));
-        setPrefix(scoreboard, 2, Component.text(config.getClockEmoji() + " " + playtimeManager.format(player))
-                .color(net.kyori.adventure.text.format.NamedTextColor.YELLOW));
-        setPrefix(scoreboard, 3, pingComponent(player));
-        setPrefix(scoreboard, 4, separatorComponent(player));
-        setPrefix(scoreboard, 5, Component.text(config.getDiscordText())
-            .color(TextColor.color(0x4B0082)));
+        List<Component> lines = activeLines(player);
+        Objective objective = scoreboard.getObjective(OBJECTIVE_NAME);
+        if (objective == null || scoreboard.getEntries().size() != lines.size()) {
+            refresh(player);
+            return;
+        }
+        for (int index = 0; index < lines.size(); index++) {
+            setPrefix(scoreboard, index, lines.get(index));
+        }
     }
 
-    private Component separatorComponent(Player player) {
+    private List<Component> activeLines(Player player) {
+        PlayerSettingsManager.Settings settings = settingsManager.get(player.getUniqueId());
+        List<Component> lines = new ArrayList<>();
+        lines.add(Component.text(player.getName()));
+        if (settings.players()) {
+            lines.add(Component.text(config.getPlayerEmoji() + " "
+                    + Bukkit.getOnlinePlayers().size() + "/" + config.getMaxPlayers())
+                    .color(net.kyori.adventure.text.format.NamedTextColor.BLUE));
+        }
+        if (settings.clock()) {
+            lines.add(Component.text(config.getClockEmoji() + " " + playtimeManager.format(player))
+                    .color(net.kyori.adventure.text.format.NamedTextColor.YELLOW));
+        }
+        if (settings.money()) {
+            lines.add(Component.text(config.getMoneyEmoji() + " Coming soon")
+                    .color(net.kyori.adventure.text.format.NamedTextColor.GOLD));
+        }
+        if (settings.ping()) {
+            lines.add(pingComponent(player));
+        }
+        lines.add(separatorComponent(player, settings));
+        lines.add(Component.text(config.getDiscordText()).color(TextColor.color(0x4B0082)));
+        return lines;
+    }
+
+    private Component separatorComponent(Player player, PlayerSettingsManager.Settings settings) {
         String players = config.getPlayerEmoji() + " "
                 + Bukkit.getOnlinePlayers().size() + "/" + config.getMaxPlayers();
         String playtime = config.getClockEmoji() + " " + playtimeManager.format(player);
         String ping = config.getMsEmoji() + " " + Math.max(0, player.getPing()) + "ms";
         int width = Math.max(player.getName().length(), config.getDiscordText().length());
-        width = Math.max(width, players.length());
-        width = Math.max(width, playtime.length());
-        width = Math.max(width, ping.length());
+        if (settings.players()) width = Math.max(width, players.length());
+        if (settings.clock()) width = Math.max(width, playtime.length());
+        if (settings.money()) width = Math.max(width, (config.getMoneyEmoji() + " Coming soon").length());
+        if (settings.ping()) width = Math.max(width, ping.length());
         return Component.text("-".repeat(Math.max(1, width)))
                 .color(net.kyori.adventure.text.format.NamedTextColor.BLACK);
     }

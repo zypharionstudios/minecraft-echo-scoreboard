@@ -4,3 +4,7 @@ main: de.echosmp.echosmp.EchoSmpPlugin
 api-version: '1.21'
 author: EchoSMP
 description: Sidebar-Scoreboard für Echo SMP
+commands:
+  scoreboard:
+    description: Öffnet die EchoSMP-Scoreboard-Einstellungen
+    usage: /scoreboard settings
