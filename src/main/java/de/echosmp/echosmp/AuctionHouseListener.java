@@ -10,9 +10,9 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.inventory.InventoryDragEvent;
 import org.bukkit.event.inventory.InventoryType;
-import org.bukkit.inventory.AnvilInventory;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.view.AnvilView;
 
 /** Verarbeitet alle Klicks und Eingaben im Auktionshaus. */
 public final class AuctionHouseListener implements Listener {
@@ -78,7 +78,7 @@ public final class AuctionHouseListener implements Listener {
         }
         if (AuctionHouseMenu.PRICE_TITLE.equals(title) && event.getSlotType() == InventoryType.SlotType.RESULT) {
             event.setCancelled(true);
-            String text = ((AnvilInventory) event.getInventory()).getRenameText().trim();
+            String text = ((AnvilView) event.getView()).getRenameText().trim();
             long price;
             try { price = Long.parseLong(text); } catch (NumberFormatException exception) { price = 0; }
             ItemStack item = menu.takePending(player.getUniqueId());
@@ -93,7 +93,7 @@ public final class AuctionHouseListener implements Listener {
         }
         if (AuctionHouseMenu.SEARCH_TITLE.equals(title) && event.getSlotType() == InventoryType.SlotType.RESULT) {
             event.setCancelled(true);
-            String search = ((AnvilInventory) event.getInventory()).getRenameText().trim();
+            String search = ((AnvilView) event.getView()).getRenameText().trim();
             menu.setSearch(player.getUniqueId(), search);
             player.closeInventory();
             menu.openMain(player);

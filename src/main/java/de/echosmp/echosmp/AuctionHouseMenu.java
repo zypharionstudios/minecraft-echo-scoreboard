@@ -47,7 +47,7 @@ public final class AuctionHouseMenu {
             AuctionListing listing = listings.get(slot);
             inventory.setItem(slot, displayItem(listing));
         }
-        inventory.setItem(45, button(Material.SUN, ChatColor.YELLOW + "Aktualisieren"));
+        inventory.setItem(45, button(Material.CLOCK, ChatColor.YELLOW + "Aktualisieren"));
         inventory.setItem(49, button(Material.ANVIL, ChatColor.GOLD + "Sortierung: " + sortName(player)));
         inventory.setItem(50, button(Material.NAME_TAG, ChatColor.AQUA + "Suche: "
                 + (searches.getOrDefault(player.getUniqueId(), "").isEmpty() ? "Alle" : searches.get(player.getUniqueId()))));
