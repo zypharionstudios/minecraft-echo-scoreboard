@@ -109,6 +109,14 @@ public final class AuctionHouseManager {
         return PurchaseResult.SUCCESS;
     }
 
+    public synchronized AuctionListing takeOwn(Player seller, UUID listingId) {
+        AuctionListing listing = listings.get(listingId);
+        if (listing == null || !listing.seller().equals(seller.getUniqueId())) return null;
+        listings.remove(listingId);
+        save();
+        return listing;
+    }
+
     public synchronized void removeExpired() {
         long now = System.currentTimeMillis();
         List<AuctionListing> expired = listings.values().stream().filter(listing -> listing.expired(now)).toList();

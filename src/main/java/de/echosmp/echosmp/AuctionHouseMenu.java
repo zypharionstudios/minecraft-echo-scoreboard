@@ -63,8 +63,15 @@ public final class AuctionHouseMenu {
 
     public void openAdd(Player player) {
         Inventory inventory = Bukkit.createInventory(null, 27, ADD_TITLE);
+        inventory.setItem(25, button(Material.GRAY_STAINED_GLASS_PANE, ChatColor.DARK_GRAY + "Gesperrt"));
         inventory.setItem(CONFIRM_SLOT, button(Material.LIME_STAINED_GLASS_PANE, ChatColor.GREEN + "Bestätigen"));
         player.openInventory(inventory);
+    }
+
+    public AuctionListing ownListingAt(Player player, int slot) {
+        if (slot < 0 || slot >= 45) return null;
+        List<AuctionListing> own = auctions.sellerListings(player.getUniqueId());
+        return slot < own.size() ? own.get(slot) : null;
     }
 
     public void setPending(Player player, ItemStack item) {

@@ -56,7 +56,16 @@ public final class AuctionHouseListener implements Listener {
         }
         if (AuctionHouseMenu.OWN_TITLE.equals(title)) {
             event.setCancelled(true);
-            if (event.getRawSlot() == 53) menu.openAdd(player);
+            if (event.getRawSlot() >= 0 && event.getRawSlot() < 45) {
+                AuctionListing listing = menu.ownListingAt(player, event.getRawSlot());
+                if (listing != null && auctions.takeOwn(player, listing.id()) != null) {
+                    give(player, listing.item());
+                    player.sendMessage(ChatColor.GREEN + "Dein Angebot wurde entfernt und zurückgegeben.");
+                    menu.openOwn(player);
+                }
+            } else if (event.getRawSlot() == 53) {
+                menu.openAdd(player);
+            }
             else if (event.getRawSlot() == 45) menu.openMain(player);
             return;
         }
@@ -71,9 +80,9 @@ public final class AuctionHouseListener implements Listener {
                 for (int slot = 0; slot < AuctionHouseMenu.CONFIRM_SLOT; slot++) event.getInventory().setItem(slot, null);
                 menu.setPending(player, item);
                 signs.open(player, SignInputManager.Mode.PRICE, this::finishPrice);
-            } else if (event.getRawSlot() >= AuctionHouseMenu.CONFIRM_SLOT) {
+            } else if (event.getRawSlot() == 25 || event.getRawSlot() == AuctionHouseMenu.CONFIRM_SLOT) {
                 event.setCancelled(true);
-            } else if (event.isShiftClick() && hasInputItem(event.getInventory())) {
+            } else if (event.isShiftClick() && inputSlotCount(event.getInventory()) > 0) {
                 event.setCancelled(true);
                 player.sendMessage(ChatColor.RED + "Es darf nur ein Item-Stack eingestellt werden.");
             } else if (event.getRawSlot() >= 0 && event.getRawSlot() < AuctionHouseMenu.CONFIRM_SLOT
@@ -91,8 +100,8 @@ public final class AuctionHouseListener implements Listener {
         if (AuctionHouseMenu.MAIN_TITLE.equals(title) || AuctionHouseMenu.OWN_TITLE.equals(title)) event.setCancelled(true);
         if (AuctionHouseMenu.ADD_TITLE.equals(title)) {
             for (int slot : event.getRawSlots()) {
-                if (slot >= AuctionHouseMenu.CONFIRM_SLOT
-                        || (hasInputItem(event.getInventory()) && slot < AuctionHouseMenu.CONFIRM_SLOT)) {
+                if (slot == 25 || slot == AuctionHouseMenu.CONFIRM_SLOT
+                    || (inputSlotCount(event.getInventory()) > 0 && slot >= 0 && slot < 25)) {
                     event.setCancelled(true);
                     return;
                 }
@@ -141,8 +150,12 @@ public final class AuctionHouseListener implements Listener {
         return found;
     }
 
-    private boolean hasInputItem(Inventory inventory) {
-        return singleItem(inventory) != null;
+    private int inputSlotCount(Inventory inventory) {
+        int count = 0;
+        for (int slot = 0; slot < AuctionHouseMenu.CONFIRM_SLOT; slot++) {
+            if (inventory.getItem(slot) != null) count++;
+        }
+        return count;
     }
 
     private boolean hasDifferentInputItem(Inventory inventory, int slot) {
