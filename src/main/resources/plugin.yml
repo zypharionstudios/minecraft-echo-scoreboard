@@ -1,4 +1,4 @@
-name: EchoSMP
+name: scoreboardpluginah
 version: 1.0.0
 main: de.echosmp.echosmp.EchoSmpPlugin
 api-version: '1.21'

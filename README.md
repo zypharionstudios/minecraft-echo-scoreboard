@@ -19,15 +19,15 @@ Ein vollständig automatisches Sidebar-Scoreboard-Plugin für Paper/Spigot 1.21+
 ## Installation
 
 1. Eine aktuelle Paper-1.21+-Serverversion mit Java 21 verwenden.
-2. Die Datei `EchoSMP-1.0.0.jar` aus dem Release oder aus `target/` nach `plugins/` kopieren.
+2. Die Datei `scoreboardpluginah.jar` aus dem Release oder aus `target/` nach `plugins/` kopieren.
 3. Den Server starten.
-4. Beim ersten Start werden `plugins/EchoSMP/config.yml` und `plugins/EchoSMP/playerdata.yml` angelegt.
+4. Beim ersten Start werden die Dateien im Ordner `plugins/scoreboardpluginah/` angelegt.
 
 Die Anzeigen und Speicherungen laufen automatisch. Zusätzlich gibt es `/scoreboard settings` und `/sell`.
 
-Mit `/scoreboard settings` kann jeder Spieler in einem 3x9-Menü Uhr, Geld, MS/Ping und Spielerzahl einzeln ein- oder ausschalten. Die Auswahl wird in `plugins/EchoSMP/settings.yml` gespeichert.
+Mit `/scoreboard settings` kann jeder Spieler in einem 3x9-Menü Uhr, Geld, MS/Ping und Spielerzahl einzeln ein- oder ausschalten. Die Auswahl wird in `plugins/scoreboardpluginah/settings.yml` gespeichert.
 
-Mit `/sell` öffnet sich ein 3x9-Menü. Verkaufbare Blöcke werden in die oberen 25 Slots gelegt. Die grüne Glasscheibe unten rechts ist nicht entnehmbar und bestätigt den Verkauf. Nicht verkaufbare Items werden zurückgegeben. Guthaben liegt in `plugins/EchoSMP/money.yml`, Blockpreise in `plugins/EchoSMP/prices.yml`; diese Preisdatei wird automatisch für wirklich jeden Block angelegt. Die neue Preisstaffel verwendet realistische Gruppenwerte statt eines 1er-Fallbacks. Eine vorhandene alte Preisdatei wird beim nächsten Serverstart einmalig auf Preis-Schema 2 migriert und kann danach manuell angepasst werden.
+Mit `/sell` öffnet sich ein 3x9-Menü. Verkaufbare Blöcke werden in die oberen 25 Slots gelegt. Die grüne Glasscheibe unten rechts ist nicht entnehmbar und bestätigt den Verkauf. Nicht verkaufbare Items werden zurückgegeben. Guthaben liegt in `plugins/scoreboardpluginah/money.yml`, Blockpreise in `plugins/scoreboardpluginah/prices.yml`; diese Preisdatei wird automatisch für wirklich jeden Block angelegt. Die neue Preisstaffel verwendet realistische Gruppenwerte statt eines 1er-Fallbacks. Eine vorhandene alte Preisdatei wird beim nächsten Serverstart einmalig auf Preis-Schema 2 migriert und kann danach manuell angepasst werden.
 
 Mit `/ah` öffnet sich das 6x9-Auktionshaus. Die unteren Bedienelemente sind Aktualisieren, Sortierung, Suche und eigene Angebote. Eigene Angebote werden über die Truhe geöffnet und mit dem Buch erstellt. Nach der Eingabe eines Preises wird das Angebot 24 Stunden lang angezeigt; Käufer erhalten das Item und der Verkäufer das Geld. Eigene Angebote können nicht gekauft werden.
 
@@ -68,7 +68,7 @@ scoreboard-title: "echo smp"
 
 ## Datenspeicherung
 
-Die Spielzeiten liegen in `plugins/EchoSMP/playerdata.yml`:
+Die Spielzeiten liegen in `plugins/scoreboardpluginah/playerdata.yml`:
 
 ```yaml
 <UUID>: <sekunden>

@@ -70,19 +70,27 @@ public final class AuctionHouseListener implements Listener {
             return;
         }
         if (AuctionHouseMenu.ADD_TITLE.equals(title)) {
-            if (event.getRawSlot() == AuctionHouseMenu.CONFIRM_SLOT) {
+            int rawSlot = event.getRawSlot();
+            if (rawSlot == AuctionHouseMenu.CONFIRM_SLOT) {
                 event.setCancelled(true);
                 ItemStack item = singleItem(event.getInventory());
                 if (item == null) {
-                    player.sendMessage(ChatColor.RED + "Lege genau ein Item in das Menü.");
+                    player.sendMessage(ChatColor.RED + "Lege genau einen Item-Stack ein.");
                     return;
                 }
-                for (int slot = 0; slot < AuctionHouseMenu.CONFIRM_SLOT; slot++) event.getInventory().setItem(slot, null);
+                for (int slot = 0; slot < 25; slot++) event.getInventory().setItem(slot, null);
                 menu.setPending(player, item);
-                signs.open(player, SignInputManager.Mode.PRICE, this::finishPrice);
-            } else if (event.getRawSlot() == 25 || event.getRawSlot() == AuctionHouseMenu.CONFIRM_SLOT) {
+                if (!signs.open(player, SignInputManager.Mode.PRICE, this::finishPrice)) {
+                    menu.takePending(player.getUniqueId());
+                    give(player, item);
+                }
+                return;
+            }
+            if (rawSlot == 25) {
                 event.setCancelled(true);
-            } else if (event.isShiftClick() && inputSlotCount(event.getInventory()) > 0) {
+                return;
+            }
+            if (event.isShiftClick() && inputSlotCount(event.getInventory()) > 0) {
                 event.setCancelled(true);
                 player.sendMessage(ChatColor.RED + "Es darf nur ein Item-Stack eingestellt werden.");
             } else if (event.getRawSlot() >= 0 && event.getRawSlot() < AuctionHouseMenu.CONFIRM_SLOT
@@ -106,7 +114,7 @@ public final class AuctionHouseListener implements Listener {
                     return;
                 }
             }
-            if (event.getRawSlots().stream().filter(slot -> slot < AuctionHouseMenu.CONFIRM_SLOT).count() > 1) {
+            if (event.getRawSlots().stream().filter(slot -> slot >= 0 && slot < 25).count() > 1) {
                 event.setCancelled(true);
             }
         }
@@ -115,7 +123,7 @@ public final class AuctionHouseListener implements Listener {
     @EventHandler
     public void onClose(InventoryCloseEvent event) {
         if (!(event.getPlayer() instanceof Player player)) return;
-        if (AuctionHouseMenu.ADD_TITLE.equals(event.getView().getTitle())) returnItems(player, event.getInventory(), 26);
+        if (AuctionHouseMenu.ADD_TITLE.equals(event.getView().getTitle())) returnItems(player, event.getInventory(), 25);
     }
 
     private void openSearch(Player player) {
