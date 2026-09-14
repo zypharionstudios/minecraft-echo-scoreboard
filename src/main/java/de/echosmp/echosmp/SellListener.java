@@ -29,17 +29,21 @@ public final class SellListener implements Listener {
         if (!SellMenu.TITLE.equals(event.getView().getTitle())) {
             return;
         }
-        event.setCancelled(true);
         if (!(event.getWhoClicked() instanceof Player player)) {
             return;
         }
         if (event.getRawSlot() == SellMenu.CONFIRM_SLOT) {
+            event.setCancelled(true);
             sell(player, event.getInventory());
             return;
         }
-        if (event.getRawSlot() < 25 && event.getRawSlot() >= 0) {
-            event.setCancelled(false);
+        if (event.getRawSlot() == 25) {
+            event.setCancelled(true);
+            return;
         }
+        // Eingabeplätze und Spielerinventar bleiben für normales Ablegen, Nehmen
+        // und Shift-Klicks frei.
+        event.setCancelled(false);
     }
 
     @EventHandler
@@ -48,11 +52,12 @@ public final class SellListener implements Listener {
             return;
         }
         for (int rawSlot : event.getRawSlots()) {
-            if (rawSlot >= 25) {
+            if (rawSlot == 25 || rawSlot == SellMenu.CONFIRM_SLOT) {
                 event.setCancelled(true);
                 return;
             }
         }
+        event.setCancelled(false);
     }
 
     @EventHandler
