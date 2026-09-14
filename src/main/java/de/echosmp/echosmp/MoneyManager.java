@@ -36,7 +36,8 @@ public final class MoneyManager {
         if (amount <= 0) {
             return;
         }
-        balances.put(uuid, Math.addExact(get(uuid), amount));
+        balances.put(uuid, get(uuid) > Long.MAX_VALUE - amount
+            ? Long.MAX_VALUE : get(uuid) + amount);
         save();
     }
 

@@ -3,6 +3,7 @@ package de.echosmp.echosmp;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
@@ -25,7 +26,7 @@ public final class AuctionHouseListener implements Listener {
         this.signs = signs;
     }
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = false)
     public void onClick(InventoryClickEvent event) {
         String title = event.getView().getTitle();
         if (!(event.getWhoClicked() instanceof Player player)) return;
@@ -71,6 +72,7 @@ public final class AuctionHouseListener implements Listener {
         }
         if (AuctionHouseMenu.ADD_TITLE.equals(title)) {
             int rawSlot = event.getRawSlot();
+            event.setCancelled(false);
             if (rawSlot == AuctionHouseMenu.CONFIRM_SLOT) {
                 event.setCancelled(true);
                 ItemStack item = singleItem(event.getInventory());
@@ -82,13 +84,19 @@ public final class AuctionHouseListener implements Listener {
                     if (isInputSlot(slot)) event.getInventory().setItem(slot, null);
                 }
                 menu.setPending(player, item);
-                if (!signs.open(player, SignInputManager.Mode.PRICE, this::finishPrice)) {
+                if (!signs.open(player, SignInputManager.Mode.PRICE, this::finishPrice,
+                    () -> returnPending(player))) {
                     menu.takePending(player.getUniqueId());
                     give(player, item);
                 }
                 return;
             }
             if (rawSlot == AuctionHouseMenu.BLOCKED_SLOT) {
+                event.setCancelled(true);
+                return;
+            }
+            if (event.getRawSlot() >= 0 && event.getRawSlot() < AuctionHouseMenu.CONFIRM_SLOT
+                    && !isInputSlot(event.getRawSlot())) {
                 event.setCancelled(true);
                 return;
             }
@@ -99,16 +107,20 @@ public final class AuctionHouseListener implements Listener {
                     && hasDifferentInputItem(event.getInventory(), event.getRawSlot())) {
                 event.setCancelled(true);
                 player.sendMessage(ChatColor.RED + "Es darf nur ein Item-Stack eingestellt werden.");
+            } else {
+                // Jeder erlaubte Menüslot und das Spielerinventar sind normal benutzbar.
+                event.setCancelled(false);
             }
             return;
         }
     }
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = false)
     public void onDrag(InventoryDragEvent event) {
         String title = event.getView().getTitle();
         if (AuctionHouseMenu.MAIN_TITLE.equals(title) || AuctionHouseMenu.OWN_TITLE.equals(title)) event.setCancelled(true);
         if (AuctionHouseMenu.ADD_TITLE.equals(title)) {
+            event.setCancelled(false);
             for (int slot : event.getRawSlots()) {
                 if (slot == AuctionHouseMenu.BLOCKED_SLOT || slot == AuctionHouseMenu.CONFIRM_SLOT
                     || (inputSlotCount(event.getInventory()) > 0 && isInputSlot(slot))) {
@@ -136,9 +148,7 @@ public final class AuctionHouseListener implements Listener {
     }
 
     private void finishPrice(Player player, String text) {
-        long price;
-        try { price = Long.parseLong(text.replace(" ", "")); }
-        catch (NumberFormatException exception) { price = 0; }
+        long price = PriceParser.parse(text);
         ItemStack item = menu.takePending(player.getUniqueId());
         if (item == null || price < 1) {
             player.sendMessage(ChatColor.RED + "Gib eine gültige ganze Zahl als Preis ein.");
@@ -147,6 +157,11 @@ public final class AuctionHouseListener implements Listener {
         }
         auctions.create(player, item, price);
         player.sendMessage(ChatColor.GREEN + "Angebot für " + MoneyManager.format(price) + " eingestellt.");
+    }
+
+    private void returnPending(Player player) {
+        ItemStack item = menu.takePending(player.getUniqueId());
+        if (item != null) give(player, item);
     }
 
     private ItemStack singleItem(Inventory inventory) {

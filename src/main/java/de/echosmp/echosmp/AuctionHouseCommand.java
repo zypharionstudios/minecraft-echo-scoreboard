@@ -42,7 +42,7 @@ public final class AuctionHouseCommand implements CommandExecutor {
             player.sendMessage(ChatColor.RED + "Halte das Item zum Verkaufen in der Hand.");
             return;
         }
-        long price = parsePrice(args[1]);
+        long price = PriceParser.parse(args[1]);
         if (price < 1) {
             player.sendMessage(ChatColor.RED + "Ungültiger Preis. Beispiele: 40000, 40k, 2.5m");
             return;
@@ -53,13 +53,4 @@ public final class AuctionHouseCommand implements CommandExecutor {
         player.sendMessage(ChatColor.GREEN + "Angebot für " + MoneyManager.format(price) + " eingestellt.");
     }
 
-    private long parsePrice(String input) {
-        String value = input.toLowerCase().replace(",", ".").trim();
-        long multiplier = 1L;
-        if (value.endsWith("k")) { multiplier = 1_000L; value = value.substring(0, value.length() - 1); }
-        else if (value.endsWith("m")) { multiplier = 1_000_000L; value = value.substring(0, value.length() - 1); }
-        else if (value.endsWith("b")) { multiplier = 1_000_000_000L; value = value.substring(0, value.length() - 1); }
-        try { return Math.round(Double.parseDouble(value) * multiplier); }
-        catch (NumberFormatException exception) { return 0L; }
-    }
 }

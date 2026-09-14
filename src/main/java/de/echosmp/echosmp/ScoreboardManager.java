@@ -7,6 +7,7 @@ import java.util.Map;
 import java.util.UUID;
 import io.papermc.paper.scoreboard.numbers.NumberFormat;
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.kyori.adventure.text.format.TextColor;
 import org.bukkit.Bukkit;
@@ -133,25 +134,28 @@ public final class ScoreboardManager {
         List<Component> lines = new ArrayList<>();
         lines.add(Component.text(player.getName()));
         if (settings.players()) {
-            lines.add(Component.text(config.getPlayerEmoji() + " "
-                    + Bukkit.getOnlinePlayers().size() + "/" + config.getMaxPlayers())
-                    .color(net.kyori.adventure.text.format.NamedTextColor.BLUE));
+            lines.add(coloredEmojiLine(config.getPlayerEmoji(), NamedTextColor.BLUE,
+                Bukkit.getOnlinePlayers().size() + "/" + config.getMaxPlayers()));
         }
         if (settings.clock()) {
-            lines.add(Component.text(config.getClockEmoji() + " " + playtimeManager.format(player))
-                    .color(net.kyori.adventure.text.format.NamedTextColor.YELLOW));
+            lines.add(coloredEmojiLine(config.getClockEmoji(), NamedTextColor.YELLOW,
+                playtimeManager.format(player)));
         }
         if (settings.money()) {
-            lines.add(Component.text(config.getMoneyEmoji() + " "
-                            + MoneyManager.format(moneyManager.get(player.getUniqueId())))
-                    .color(net.kyori.adventure.text.format.NamedTextColor.GREEN));
+            lines.add(coloredEmojiLine(config.getMoneyEmoji(), NamedTextColor.GREEN,
+                MoneyManager.format(moneyManager.get(player.getUniqueId()))));
         }
         if (settings.ping()) {
             lines.add(pingComponent(player));
         }
         lines.add(separatorComponent(player, settings));
-        lines.add(Component.text(config.getDiscordText()).color(TextColor.color(0x4B0082)));
+        lines.add(Component.text(config.getDiscordText()).color(NamedTextColor.WHITE));
         return lines;
+    }
+
+    private Component coloredEmojiLine(String emoji, TextColor emojiColor, String value) {
+        return Component.text(emoji).color(emojiColor)
+                .append(Component.text(" " + value).color(NamedTextColor.WHITE));
     }
 
     private Component separatorComponent(Player player, PlayerSettingsManager.Settings settings) {
@@ -181,7 +185,8 @@ public final class ScoreboardManager {
         } else {
             color = TextColor.color(0xFF5555);
         }
-        return Component.text(config.getMsEmoji() + " " + ping + "ms").color(color);
+        return Component.text(config.getMsEmoji()).color(color)
+            .append(Component.text(" " + ping + "ms").color(NamedTextColor.WHITE));
     }
 
     private void setPrefix(Scoreboard scoreboard, int index, Component prefix) {
