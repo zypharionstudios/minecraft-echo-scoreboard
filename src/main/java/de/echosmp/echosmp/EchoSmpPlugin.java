@@ -25,12 +25,15 @@ public final class EchoSmpPlugin extends JavaPlugin {
         SettingsMenu settingsMenu = new SettingsMenu(settingsManager);
         SellMenu sellMenu = new SellMenu(priceManager);
         AuctionHouseMenu auctionHouseMenu = new AuctionHouseMenu(auctionHouseManager);
+        SignInputManager signInputManager = new SignInputManager(this);
 
         Bukkit.getPluginManager().registerEvents(new JoinListener(playtimeManager, scoreboardManager, auctionHouseManager), this);
         Bukkit.getPluginManager().registerEvents(new QuitListener(playtimeManager, scoreboardManager), this);
         Bukkit.getPluginManager().registerEvents(new SettingsListener(settingsManager, settingsMenu, scoreboardManager), this);
         Bukkit.getPluginManager().registerEvents(new SellListener(sellMenu, moneyManager), this);
-        Bukkit.getPluginManager().registerEvents(new AuctionHouseListener(auctionHouseManager, auctionHouseMenu, moneyManager), this);
+        Bukkit.getPluginManager().registerEvents(signInputManager, this);
+        Bukkit.getPluginManager().registerEvents(new AuctionHouseListener(auctionHouseManager, auctionHouseMenu,
+            moneyManager, signInputManager), this);
         getCommand("scoreboard").setExecutor(new SettingsCommand(settingsMenu));
         getCommand("sell").setExecutor(new SellCommand(sellMenu));
         getCommand("ah").setExecutor(new AuctionHouseCommand(auctionHouseMenu));

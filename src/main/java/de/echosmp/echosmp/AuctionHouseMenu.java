@@ -9,18 +9,15 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
-import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.inventory.meta.SkullMeta;
 
 /** Erstellt Haupt-, eigene-, Einstell- und Preis-Menüs des Auktionshauses. */
 public final class AuctionHouseMenu {
     public static final String MAIN_TITLE = "EchoSMP AH";
     public static final String OWN_TITLE = "EchoSMP Meine Angebote";
     public static final String ADD_TITLE = "EchoSMP Angebot hinzufügen";
-    public static final String PRICE_TITLE = "EchoSMP Preis eingeben";
     public static final String SEARCH_TITLE = "EchoSMP AH Suche";
     public static final int CONFIRM_SLOT = 26;
     private final AuctionHouseManager auctions;
@@ -70,12 +67,11 @@ public final class AuctionHouseMenu {
         player.openInventory(inventory);
     }
 
-    public void openPrice(Player player, ItemStack item) {
+    public void setPending(Player player, ItemStack item) {
         pendingItems.put(player.getUniqueId(), item.clone());
-        Inventory inventory = Bukkit.createInventory(null, InventoryType.ANVIL, PRICE_TITLE);
-        inventory.setItem(0, button(Material.PAPER, "Preis eingeben"));
-        player.openInventory(inventory);
     }
+
+    public void cancelPending(Player player) { pendingItems.remove(player.getUniqueId()); }
 
     public ItemStack takePending(UUID uuid) { return pendingItems.remove(uuid); }
     public ItemStack pending(UUID uuid) { return pendingItems.get(uuid); }
